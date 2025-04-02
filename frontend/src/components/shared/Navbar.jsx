@@ -80,7 +80,7 @@ function Navbar() {
                 <Avatar className="w-10 h-10 rounded-full cursor-pointer">
                   {/* Set image size and rounded style */}
                   <AvatarImage
-                    src={user?.profile?.profilePhoto}
+                    src={user?.profile?.profilePhoto || "https://github.com/shadcn.png"}
                     alt="User Avatar"
                     className="rounded-full"
                   />
@@ -90,7 +90,7 @@ function Navbar() {
                 <div className="flex items-center gap-2">
                   <Avatar className="w-10 h-10 rounded-full cursor-pointer">
                     <AvatarImage
-                      src={user?.profile?.profilePhoto}
+                      src={user?.profile?.profilePhoto || "https://github.com/shadcn.png"}
                       alt="User Avatar"
                       className="rounded-full"
                     />
