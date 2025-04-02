@@ -5,7 +5,7 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Loader2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Await } from 'react-router-dom';
+import { Await, useNavigate } from 'react-router-dom';
 import axios, { Axios } from 'axios';
 import { USER_API_END_POINT } from '@/utils/constant';
 import { setUser } from '@/redux/authSlice';
@@ -32,6 +32,7 @@ import { toast } from 'sonner';
 const UpdateProfileDialog = ({ open, setOpen }) => {
 
     const [loading,setLoading] = useState(false);
+    const navigate=useNavigate();
 
     const {user}=useSelector(store=>store.auth);
 
@@ -79,6 +80,11 @@ toast.success(res.data.message)
         }catch(error){
        console.log(error);
        toast.error(error.response.data.message)
+       if(error.response.data.message==="Token changed !! Please login again"){
+        dispatch(setUser(null));
+        navigate("/");
+        toast.success(res.data.message)
+       }
         }
         finally{
             setLoading(false);
