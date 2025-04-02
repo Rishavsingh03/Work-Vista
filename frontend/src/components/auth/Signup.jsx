@@ -63,9 +63,12 @@ function Signup() {
         navigate("/login");
         toast.success(res.data.message);
       }
+      else{
+          console.log("res ",res);
+      }
     }catch(error){
-     console.log(error);
-     toast.error(error.response.data.message);
+     console.log("in signup = ",error);
+     toast.error(error.response.data.message?error.response.data.message:"Something went wrong");
     } finally{
       dispatch(setLoading(false));
     }
