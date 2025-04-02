@@ -91,7 +91,7 @@ function Signup() {
               value={input.fullname}
               name="fullname"
               onChange={changeEventHandler}
-              placeholder="Ayush Ranjan"
+              placeholder="Rishav Kumar"
             />
           </div>
 
@@ -102,7 +102,7 @@ function Signup() {
               value={input.email}
               name="email"
               onChange={changeEventHandler}
-              placeholder="ayush@gmail.com"
+              placeholder="rishav@gmail.com"
             />
           </div>
 
