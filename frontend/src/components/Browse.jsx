@@ -9,9 +9,10 @@ import useGetAllJobs from '@/hooks/useGetAllJobs';
 //const randomJobs = [1, 2, 3,4,5,6,7,8,8,9,111,12];
 
 const Browse = () => {
+  const dispatch=useDispatch();
+  dispatch(setSearchedQuery(""));
   useGetAllJobs();
     const{allJobs}=useSelector(store=>store.job);
-     const dispatch=useDispatch();
     useEffect(()=>
     {
         return ()=>{
