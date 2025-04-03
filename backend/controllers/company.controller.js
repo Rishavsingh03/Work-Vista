@@ -1,6 +1,6 @@
 import { Company } from "../models/company.model.js";
-// import getDataUri from "../utils/datauri.js";
-// import cloudinary from "../utils/cloudinary.js";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 export const registerCompany = async (req, res) => {
     try {
         const { companyName } = req.body;
@@ -80,10 +80,10 @@ export const updateCompany = async (req, res) => {
  
         const file = req.file;
          //idhar cloudinary ayega
-        // const fileUri = getDataUri(file);
-        //  const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        // const logo = cloudResponse.secure_url;
-        const logo="";
+        const fileUri = getDataUri(file);
+         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        const logo = cloudResponse.secure_url;
+        // const logo="";
     
         const updateData = { name, description, website, location ,logo}; 
 
