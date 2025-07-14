@@ -3,10 +3,12 @@ import { Button } from './ui/button'
 import { Bookmark } from 'lucide-react'
 import { Avatar, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
-import {  useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Job = ({job}) => {
     const navigate = useNavigate();
+    const { user } = useSelector(state => state.auth);
     //const jobId = "lsekdhjgdsnfvsdkjf";
 
     const daysAgoFunction = (mongodbTime) => {
@@ -14,6 +16,25 @@ const Job = ({job}) => {
         const currentTime = new Date();
         const timeDifference = currentTime - createdAt;
         return Math.floor(timeDifference/(1000*24*60*60));
+    }
+    
+    const handleDetailsClick = () => {
+        if (user) {
+            navigate(`/description/${job?._id}`);
+        } else {
+            alert("Please login to view job details");
+            navigate('/login');
+        }
+    }
+
+    const handleSaveForLater = () => {
+        if (user) {
+            // Implement save for later functionality
+            alert("Job saved for later");
+        } else {
+            alert("Please login to save jobs");
+            navigate('/login');
+        }
     }
     
     return (
@@ -45,8 +66,8 @@ const Job = ({job}) => {
                 <Badge className={'text-[#7209b7] font-bold'} variant="ghost">{job?.salary}LPA</Badge>
             </div>
             <div className='flex items-center gap-4 mt-4'>
-            <Button onClick={()=> navigate(`/description/${job?._id}`)} variant="outline">Details</Button>
-                <Button className="bg-[#7209b7]">Save For Later</Button>
+                <Button onClick={handleDetailsClick} variant="outline">Details</Button>
+                <Button onClick={handleSaveForLater} className="bg-[#7209b7]">Save For Later</Button>
             </div>
         </div>
     )
