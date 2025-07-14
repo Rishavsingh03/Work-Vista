@@ -12,23 +12,25 @@ const Applicants = () => {
     const dispatch = useDispatch();
     const {applicants} = useSelector(store=>store.application);
 
-    useEffect(() => {
-        const fetchAllApplicants = async () => {
-            try {
-                const res = await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`, { withCredentials: true });
-                dispatch(setAllApplicants(res.data.job));
-            } catch (error) {
-                console.log(error);
-            }
+    const fetchAllApplicants = async () => {
+        try {
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`, { withCredentials: true });
+            dispatch(setAllApplicants(res.data.job));
+        } catch (error) {
+            console.log(error);
         }
+    };
+
+    useEffect(() => {
         fetchAllApplicants();
-    }, []);
+    }, [params.id]);
+    
     return (
         <div>
             <Navbar />
             <div className='max-w-7xl mx-auto'>
                 <h1 className='font-bold text-xl my-5'>Applicants {applicants?.applications?.length}</h1>
-                <ApplicantsTable />
+                <ApplicantsTable refreshData={fetchAllApplicants} />
             </div>
         </div>
     )

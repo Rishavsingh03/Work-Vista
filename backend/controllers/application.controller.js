@@ -107,7 +107,18 @@ export const updateStatus = async (req,res) => {
             })
         };
 
-        // find the application by applicantion id
+        // Normalize the status value
+        const normalizedStatus = status.toLowerCase();
+        
+        // Validate the status value
+        if (!['pending', 'accepted', 'rejected'].includes(normalizedStatus)) {
+            return res.status(400).json({
+                message: 'Invalid status value. Must be "pending", "accepted", or "rejected"',
+                success: false
+            });
+        }
+
+        // find the application by application id
         const application = await Application.findOne({_id:applicationId});
         if(!application){
             return res.status(404).json({
@@ -116,8 +127,16 @@ export const updateStatus = async (req,res) => {
             })
         };
 
+        // Check if the status is already set to the requested status
+        if(application.status === normalizedStatus) {
+            return res.status(400).json({
+                message:`Application is already ${normalizedStatus}`,
+                success:false
+            });
+        }
+
         // update the status
-        application.status = status.toLowerCase();
+        application.status = normalizedStatus;
         await application.save();
 
         return res.status(200).json({
@@ -127,5 +146,34 @@ export const updateStatus = async (req,res) => {
 
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
+    }
+}
+
+export const getApplicationStatus = async (req, res) => {
+    try {
+        const applicationId = req.params.id;
+        
+        const application = await Application.findOne({ _id: applicationId });
+        if(!application) {
+            return res.status(404).json({
+                message: "Application not found.",
+                success: false
+            });
+        }
+        
+        return res.status(200).json({
+            status: application.status,
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
 }
