@@ -16,7 +16,7 @@ const Home=()=> {
   useGetAllJobs();
   // console.log("Hook");
   // console.log("useEffect"); 
-  dispatch(setSearchedQuery(""));
+  // dispatch(setSearchedQuery(""));
   const {user}=useSelector(store=>store.auth);
   const {searchedQuery}=useSelector(store=>store.job);
   
