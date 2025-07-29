@@ -10,7 +10,7 @@ import useGetAllJobs from '@/hooks/useGetAllJobs';
 
 const Browse = () => {
   const dispatch=useDispatch();
-  dispatch(setSearchedQuery(""));
+//   dispatch(setSearchedQuery(""));
   useGetAllJobs();
     const{allJobs}=useSelector(store=>store.job);
     useEffect(()=>
