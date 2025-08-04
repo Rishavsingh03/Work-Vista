@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Navbar from './shared/Navbar'
 import HeroSection from './HeroSection'
+import Statistics from './Statistics'
 import CatergoryCarousel from './CatergoryCarousel'
 import LatestJobs from './LatestJobs'
 import Footer from './Footer'
@@ -28,13 +29,13 @@ const Home=()=> {
   },[]);
   
   return (
-    <div>
+    <div className="min-h-screen bg-[#1A1A2E]">
         <Navbar/>  
         <HeroSection/>
-         <CatergoryCarousel/>
+        <Statistics/>
+        <CatergoryCarousel/>
         <LatestJobs/>
-         <Footer/> 
-       
+        <Footer/> 
     </div>
   )
 }
