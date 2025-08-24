@@ -11,10 +11,15 @@ const useGetAllAdminJobs = () => {
             try {
                 const res = await axios.get(`${JOB_API_END_POINT}/getadminjobs`,{withCredentials:true});
                 if(res.data.success){
-                    dispatch(setAllAdminJobs(res.data.jobs));
+                    dispatch(setAllAdminJobs(res.data.jobs || []));
+                } else {
+                    // If API call succeeds but returns no jobs, set empty array
+                    dispatch(setAllAdminJobs([]));
                 }
             } catch (error) {
                 console.log(error);
+                // If API call fails, set empty array to prevent undefined errors
+                dispatch(setAllAdminJobs([]));
             }
         }
         fetchAllAdminJobs();

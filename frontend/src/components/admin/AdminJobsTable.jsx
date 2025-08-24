@@ -7,26 +7,41 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const AdminJobsTable = () => {
-    const { allAdminJobs, searchJobByText } = useSelector(store => store.job);
+    const { allAdminJobs = [], searchJobByText = "" } = useSelector(store => store.job);
 
-    const [filterJobs, setFilterJobs] = useState(allAdminJobs);
+    const [filterJobs, setFilterJobs] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('called');
+        // Ensure allAdminJobs is an array before filtering
+        if (!Array.isArray(allAdminJobs)) {
+            setFilterJobs([]);
+            return;
+        }
+        
         const filteredJobs = allAdminJobs.filter((job) => {
             if (!searchJobByText) {
                 return true;
             };
-            return job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) || job?.company?.name.toLowerCase().includes(searchJobByText.toLowerCase());
-
+            return job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) || 
+                   job?.company?.name?.toLowerCase().includes(searchJobByText.toLowerCase());
         });
         setFilterJobs(filteredJobs);
     }, [allAdminJobs, searchJobByText])
+    
+    // Show loading state if allAdminJobs is not loaded yet
+    if (!Array.isArray(allAdminJobs)) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <div className="text-gray-500">Loading jobs...</div>
+            </div>
+        );
+    }
+    
     return (
         <div>
             <Table>
-                <TableCaption>A list of your recent  posted jobs</TableCaption>
+                <TableCaption>A list of your recent posted jobs</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Company Name</TableHead>
@@ -36,12 +51,18 @@ const AdminJobsTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {
-                        filterJobs?.map((job) => (
-                            <tr>
-                                <TableCell>{job?.company?.name}</TableCell>
-                                <TableCell>{job?.title}</TableCell>
-                                <TableCell>{job?.createdAt.split("T")[0]}</TableCell>
+                    {filterJobs.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center text-gray-500 py-8">
+                                {allAdminJobs.length === 0 ? 'No jobs found' : 'No jobs match your search'}
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        filterJobs.map((job, index) => (
+                            <TableRow key={job._id || index}>
+                                <TableCell>{job?.company?.name || 'N/A'}</TableCell>
+                                <TableCell>{job?.title || 'N/A'}</TableCell>
+                                <TableCell>{job?.createdAt ? job.createdAt.split("T")[0] : 'N/A'}</TableCell>
                                 <TableCell className="text-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger><MoreHorizontal /></PopoverTrigger>
@@ -57,10 +78,9 @@ const AdminJobsTable = () => {
                                         </PopoverContent>
                                     </Popover>
                                 </TableCell>
-                            </tr>
-
+                            </TableRow>
                         ))
-                    }
+                    )}
                 </TableBody>
             </Table>
         </div>

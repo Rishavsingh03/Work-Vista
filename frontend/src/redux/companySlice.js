@@ -5,7 +5,7 @@ const companySlice= createSlice({
     name:"company",
     initialState:{
         singleCompany:null,
-        Companies:[],
+        companies:[],
         searchCompanyByText:"",
     },
     reducers:{
@@ -17,7 +17,7 @@ const companySlice= createSlice({
             state.companies=action.payload;
         },
         setSearchCompanyByText:(state,action)=>{
-            state. searchCompanyByText=action.payload;
+            state.searchCompanyByText=action.payload;
         }
     }
 });

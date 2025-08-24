@@ -7,19 +7,35 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const CompaniesTable = () => {
-    const { companies, searchCompanyByText } = useSelector(store => store.company);
-    const [filterCompany, setFilterCompany] = useState(companies);
+    const { companies = [], searchCompanyByText = "" } = useSelector(store => store.company);
+    const [filterCompany, setFilterCompany] = useState([]);
     const navigate = useNavigate();
+    
     useEffect(()=>{
-        const filteredCompany = companies.length >= 0 && companies.filter((company)=>{
+        // Ensure companies is an array before filtering
+        if (!Array.isArray(companies)) {
+            setFilterCompany([]);
+            return;
+        }
+        
+        const filteredCompany = companies.filter((company)=>{
             if(!searchCompanyByText){
                 return true
             };
             return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase());
-
         });
         setFilterCompany(filteredCompany);
     },[companies,searchCompanyByText])
+    
+    // Show loading state if companies is not loaded yet
+    if (!Array.isArray(companies)) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <div className="text-gray-500">Loading companies...</div>
+            </div>
+        );
+    }
+    
     return (
         <div>
             <Table>
@@ -33,16 +49,22 @@ const CompaniesTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {
-                        filterCompany?.map((company) => (
-                            <tr>
+                    {filterCompany.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center text-gray-500 py-8">
+                                {companies.length === 0 ? 'No companies found' : 'No companies match your search'}
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        filterCompany.map((company, index) => (
+                            <TableRow key={company._id || index}>
                                 <TableCell>
                                     <Avatar>
                                         <AvatarImage src={company.logo}/>
                                     </Avatar>
                                 </TableCell>
                                 <TableCell>{company.name}</TableCell>
-                                <TableCell>{company.createdAt.split("T")[0]}</TableCell>
+                                <TableCell>{company.createdAt ? company.createdAt.split("T")[0] : 'N/A'}</TableCell>
                                 <TableCell className="text-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger><MoreHorizontal /></PopoverTrigger>
@@ -54,10 +76,9 @@ const CompaniesTable = () => {
                                         </PopoverContent>
                                     </Popover>
                                 </TableCell>
-                            </tr>
-
+                            </TableRow>
                         ))
-                    }
+                    )}
                 </TableBody>
             </Table>
         </div>

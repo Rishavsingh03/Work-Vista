@@ -13,12 +13,16 @@ const useGetAllCompanies=()=> {
         try{
          const res= await axios.get(`${COMPANY_API_END_POINT}/get`,{withCredentials:true});
          if(res.data.success){
-          dispatch(setCompanies(res.data.companies));
+          dispatch(setCompanies(res.data.companies || []));
+         } else {
+          // If API call succeeds but returns no companies, set empty array
+          dispatch(setCompanies([]));
          }
         }
         catch(error){
          console.log(error);
-         
+         // If API call fails, set empty array to prevent undefined errors
+         dispatch(setCompanies([]));
         }
     }
     fetchCompanies();
